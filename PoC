@@ -1,0 +1,36 @@
+import hashlib
+import time
+
+class RetroAIBlockchain:
+    def __init__(self, business_name, creation_time, btc_price_at_creation, revenue_stream):
+        self.business_name = business_name
+        self.creation_time = creation_time
+        self.btc_price_at_creation = btc_price_at_creation  # Historical BTC price
+        self.revenue_stream = revenue_stream
+        self.profit = self.calculate_profit()
+        self.previous_hash = None
+        self.block_hash = self.calculate_hash()
+
+    def calculate_hash(self):
+        block_data = f"{self.business_name}{self.creation_time}{self.revenue_stream}{self.profit}{self.previous_hash}"
+        return hashlib.sha256(block_data.encode()).hexdigest()
+
+    def calculate_profit(self):
+        # Retroactive profit model: calculate profit based on Bitcoin's historical value
+        return self.revenue_stream / self.btc_price_at_creation  # Converting revenue to BTC based on historical BTC value
+
+    def set_previous_block(self, prev_block):
+        self.previous_hash = prev_block.block_hash
+
+# Example of an AI-powered retroactive business creation (from 2010 BTC price of $0.1)
+business1 = RetroAIBlockchain("AI-Powered Tech", "2010", 0.1, 1000)  # $1000 revenue when BTC was $0.1
+business2 = RetroAIBlockchain("Crypto Innovation", "2010", 0.1, 5000)  # $5000 revenue when BTC was $0.1
+
+# Link businesses (creating a chain of profitable businesses)
+business2.set_previous_block(business1)
+
+# Print details to verify
+print(f"Retro Business 1 Profit (BTC): {business1.profit}")
+print(f"Retro Business 2 Profit (BTC): {business2.profit}")
+print(f"Retro Business 1 Block Hash: {business1.block_hash}")
+print(f"Retro Business 2 Block Hash: {business2.block_hash}")
